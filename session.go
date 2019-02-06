@@ -68,17 +68,17 @@ func (p plugin) Meta() meta.Meta {
 	return &meta.Data{
 		ID: meta.ID{
 			ID:      "nori/session",
-			Version: "1.0",
+			Version: "1.0.0",
 		},
 		Author: meta.Author{
 			Name: "Nori",
 			URI:  "https://nori.io/",
 		},
 		Core: meta.Core{
-			VersionConstraint: ">=1.0, <2.0",
+			VersionConstraint: ">=1.0.0, <2.0.0",
 		},
 		Dependencies: []meta.Dependency{
-			meta.Cache.Dependency("1.0"),
+			meta.Cache.Dependency("1.0.0"),
 		},
 		Description: meta.Description{
 			Name:        "Nori Session",
