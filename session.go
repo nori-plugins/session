@@ -21,7 +21,7 @@ import (
 
 	"bytes"
 
-	"github.com/cheebo/gorest"
+	rest "github.com/cheebo/gorest"
 	"github.com/dgrijalva/jwt-go"
 
 	"github.com/nori-io/nori-common/config"
@@ -148,7 +148,11 @@ func (i *instance) Delete(key []byte) error {
 }
 
 func (i *instance) SessionId(ctx context.Context) []byte {
-	return ctx.Value(interfaces.SessionIdContextKey).([]byte)
+	str := ctx.Value(interfaces.SessionIdContextKey).(string)
+	buf := make([]byte, 0, len(str))
+	w := bytes.NewBuffer(buf)
+	w.WriteString(str)
+	return w.Bytes()
 }
 
 func (i *instance) Verify() endpoint.Middleware {
