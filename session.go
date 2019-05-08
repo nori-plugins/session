@@ -14,12 +14,10 @@
 package main
 
 import (
-	"context"
-	"time"
-
-	"encoding/gob"
-
 	"bytes"
+	"context"
+	"encoding/gob"
+	"time"
 
 	rest "github.com/cheebo/gorest"
 	"github.com/dgrijalva/jwt-go"
@@ -29,8 +27,6 @@ import (
 	"github.com/nori-io/nori-common/interfaces"
 	"github.com/nori-io/nori-common/meta"
 	noriPlugin "github.com/nori-io/nori-common/plugin"
-
-	"github.com/sirupsen/logrus"
 )
 
 type plugin struct {
@@ -45,7 +41,7 @@ type pluginConfig struct {
 type instance struct {
 	cache  interfaces.Cache
 	config *pluginConfig
-	log    *logrus.Logger
+	log    interfaces.Logger
 }
 
 var (
