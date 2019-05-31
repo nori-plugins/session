@@ -21,10 +21,11 @@ import (
 
 	rest "github.com/cheebo/gorest"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/nori-io/nori-common/logger"
 
 	"github.com/nori-io/nori-common/config"
 	"github.com/nori-io/nori-common/endpoint"
-	"github.com/nori-io/nori-common/interfaces"
+	"github.com/nori-io/nori-interfaces/interfaces"
 	"github.com/nori-io/nori-common/meta"
 	noriPlugin "github.com/nori-io/nori-common/plugin"
 )
@@ -41,7 +42,7 @@ type pluginConfig struct {
 type instance struct {
 	cache  interfaces.Cache
 	config *pluginConfig
-	log    interfaces.Logger
+	log    logger.Writer
 }
 
 var (
@@ -74,13 +75,13 @@ func (p plugin) Meta() meta.Meta {
 			VersionConstraint: ">=1.0.0, <2.0.0",
 		},
 		Dependencies: []meta.Dependency{
-			meta.Cache.Dependency("1.0.0"),
+			interfaces.CacheInterface.Dependency("1.0.0"),
 		},
 		Description: meta.Description{
 			Name:        "Nori Session",
 			Description: "Nori: Session Interface",
 		},
-		Interface: meta.Session,
+		Interface: interfaces.SessionInterface,
 		License: meta.License{
 			Title: "",
 			Type:  "GPLv3",
@@ -92,7 +93,7 @@ func (p plugin) Meta() meta.Meta {
 
 func (p *plugin) Start(ctx context.Context, registry noriPlugin.Registry) error {
 	if p.instance == nil {
-		cache, _ := registry.Cache()
+		cache, _ := interfaces.GetCache(registry)
 		instance := &instance{
 			cache:  cache,
 			config: p.config,
