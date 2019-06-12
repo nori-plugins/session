@@ -25,9 +25,9 @@ import (
 
 	"github.com/nori-io/nori-common/config"
 	"github.com/nori-io/nori-common/endpoint"
-	"github.com/nori-io/nori-interfaces/interfaces"
 	"github.com/nori-io/nori-common/meta"
 	noriPlugin "github.com/nori-io/nori-common/plugin"
+	"github.com/nori-io/nori-interfaces/interfaces"
 )
 
 type plugin struct {
@@ -75,7 +75,7 @@ func (p plugin) Meta() meta.Meta {
 			VersionConstraint: ">=1.0.0, <2.0.0",
 		},
 		Dependencies: []meta.Dependency{
-			interfaces.CacheInterface.Dependency("1.0.0"),
+			interfaces.CacheInterface.Dependency(),
 		},
 		Description: meta.Description{
 			Name:        "Nori Session",
