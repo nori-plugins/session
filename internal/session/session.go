@@ -4,23 +4,35 @@ import (
 	"bytes"
 	"context"
 	"encoding/gob"
-	"net"
 	"time"
 
 	rest "github.com/cheebo/gorest"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/nori-io/nori-common/endpoint"
-	"github.com/nori-io/nori-common/logger"
+	"github.com/nori-io/nori-common/v2/plugin"
 	"github.com/nori-io/nori-interfaces/interfaces"
+
+	c "github.com/nori-io/cache-memory/pkg"
+
 )
 
 type Instance struct {
-	cache  interfaces.Cache
-	config *pluginConfig
-	log    logger.Writer
+	cache c.Cache
 }
 
-func (i *instance) Get(key []byte, data interface{}) error {
+func New(r plugin.Registry) (*Instance, error) {
+	cache, err := c.GetCache(r)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &Instance{
+		cache: cache,
+	}, nil
+}
+
+func (i *Instance) Get(key []byte, data interface{}) error {
 	val, err := i.cache.Get(key)
 	if err != nil {
 		return err
@@ -41,7 +53,7 @@ func (i *instance) Get(key []byte, data interface{}) error {
 	return nil
 }
 
-func (i *instance) Save(key []byte, data interface{}, exp time.Duration) error {
+func (i *Instance) Save(key []byte, data interface{}, exp time.Duration) error {
 	var buf bytes.Buffer
 	enc := gob.NewEncoder(&buf)
 	err := enc.Encode(data)
@@ -51,11 +63,11 @@ func (i *instance) Save(key []byte, data interface{}, exp time.Duration) error {
 	return i.cache.Set(key, buf.Bytes(), exp)
 }
 
-func (i *instance) Delete(key []byte) error {
+func (i *Instance) Delete(key []byte) error {
 	return i.cache.Delete(key)
 }
 
-func (i *instance) SessionId(ctx context.Context) []byte {
+func (i *Instance) SessionId(ctx context.Context) []byte {
 	str := ctx.Value(interfaces.SessionIdContextKey).(string)
 	buf := make([]byte, 0, len(str))
 	w := bytes.NewBuffer(buf)
@@ -63,7 +75,7 @@ func (i *instance) SessionId(ctx context.Context) []byte {
 	return w.Bytes()
 }
 
-func (i *instance) Verify() endpoint.Middleware {
+func (i *Instance) Verify() endpoint.Middleware {
 	return func(next endpoint.Endpoint) endpoint.Endpoint {
 		return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 			var verify interfaces.SessionVerification
@@ -121,7 +133,7 @@ func (i *instance) Verify() endpoint.Middleware {
 	}
 }
 
-func (i *instance) verify(key []byte, verify interfaces.SessionVerification) (interface{}, error) {
+func (i *Instance) verify(key []byte, verify interfaces.SessionVerification) (interface{}, error) {
 	switch verify {
 	case interfaces.WhiteList:
 		state, err := i.cache.Get(key)

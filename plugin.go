@@ -14,6 +14,7 @@
 package main
 
 import (
+	"context"
 
 	"github.com/nori-io/nori-common/v2/logger"
 
@@ -35,8 +36,9 @@ type pluginConfig struct {
 	VerificationType config.String
 }
 
-func (p *plugin) Init(_ context.Context, config config.Manager) error {
-	cm := config.Register(p.Meta())
+func (p *plugin) Init(ctx context.Context, config config.Config, l logger.FieldLogger) error {
+	p.logger = l
+	p.instance=session.New
 	p.config = &pluginConfig{
 		VerificationType: cm.String("", "verification type: NoVerify, WhiteList or BlackList"),
 	}
