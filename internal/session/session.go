@@ -17,6 +17,7 @@ func (s *Session) Get(key []byte, data interface{}) error {
 	if (value == nil) || (err != nil) {
 		return err
 	}
+	data = value
 	return nil
 }
 func (s *Session) Save(key []byte, data interface{}, exp time.Duration) error {
