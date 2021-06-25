@@ -36,7 +36,7 @@ func New() p.Plugin {
 
 type plugin struct {
 	logger   logger.FieldLogger
-	instance *session.Instance
+	instance *session.Session
 	config   conf
 }
 
@@ -53,6 +53,10 @@ func (p plugin) Init(ctx context.Context, config config.Config, log logger.Field
 }
 
 func (p plugin) Instance() interface{} {
+	return p.getInstance()
+}
+
+func (p plugin) getInstance() s.Session {
 	return p.instance
 }
 
@@ -89,7 +93,7 @@ func (p plugin) Meta() meta.Meta {
 
 func (p plugin) Start(ctx context.Context, registry registry.Registry) error {
 	var err error
-	p.instance, err = session.New(registry)
+	p.instance, err = session.NewSession(registry)
 	if err != nil {
 		return err
 	}
