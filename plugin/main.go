@@ -16,16 +16,16 @@ package main
 import (
 	"context"
 
-	"github.com/nori-io/common/v4/pkg/domain/meta"
-	"github.com/nori-io/common/v4/pkg/domain/registry"
+	"github.com/nori-io/common/v5/pkg/domain/meta"
+	"github.com/nori-io/common/v5/pkg/domain/registry"
 
-	"github.com/nori-io/common/v4/pkg/domain/logger"
+	"github.com/nori-io/common/v5/pkg/domain/logger"
 
-	"github.com/nori-io/common/v4/pkg/domain/config"
-	p "github.com/nori-io/common/v4/pkg/domain/plugin"
-	m "github.com/nori-io/common/v4/pkg/meta"
+	"github.com/nori-io/common/v5/pkg/domain/config"
+	p "github.com/nori-io/common/v5/pkg/domain/plugin"
+	m "github.com/nori-io/common/v5/pkg/meta"
 	c "github.com/nori-io/interfaces/nori/cache"
-	s "github.com/nori-io/interfaces/nori/session"
+	s "github.com/nori-io/interfaces/nori/session/v2"
 
 	"github.com/nori-plugins/session/internal/session"
 )

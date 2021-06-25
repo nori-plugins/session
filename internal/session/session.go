@@ -1,11 +1,9 @@
 package session
 
 import (
-
-	"github.com/nori-io/common/v4/pkg/domain/registry"
+	"github.com/nori-io/common/v5/pkg/domain/registry"
 
 	c "github.com/nori-io/interfaces/nori/cache"
-
 )
 
 type Instance struct {
