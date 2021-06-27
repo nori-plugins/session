@@ -11,30 +11,32 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
-package plugin
+package main
 
 import (
 	"context"
 
-	"github.com/nori-io/common/v4/pkg/domain/meta"
-	"github.com/nori-io/common/v4/pkg/domain/registry"
+	"github.com/nori-io/common/v5/pkg/domain/meta"
+	"github.com/nori-io/common/v5/pkg/domain/registry"
 
-	"github.com/nori-io/common/v4/pkg/domain/logger"
+	"github.com/nori-io/common/v5/pkg/domain/logger"
 
-	"github.com/nori-io/common/v4/pkg/domain/config"
-	p "github.com/nori-io/common/v4/pkg/domain/plugin"
-	m "github.com/nori-io/common/v4/pkg/meta"
+	"github.com/nori-io/common/v5/pkg/domain/config"
+	p "github.com/nori-io/common/v5/pkg/domain/plugin"
+	m "github.com/nori-io/common/v5/pkg/meta"
 	c "github.com/nori-io/interfaces/nori/cache"
-	s "github.com/nori-io/interfaces/nori/session"
+	s "github.com/nori-io/interfaces/nori/session/v2"
 
 	"github.com/nori-plugins/session/internal/session"
 )
 
-var Plugin p.Plugin = plugin{}
+func New() p.Plugin {
+	return &plugin{}
+}
 
 type plugin struct {
 	logger   logger.FieldLogger
-	instance *session.Instance
+	instance *session.Session
 	config   conf
 }
 
@@ -51,6 +53,10 @@ func (p plugin) Init(ctx context.Context, config config.Config, log logger.Field
 }
 
 func (p plugin) Instance() interface{} {
+	return p.getInstance()
+}
+
+func (p plugin) getInstance() s.Session {
 	return p.instance
 }
 
@@ -87,7 +93,7 @@ func (p plugin) Meta() meta.Meta {
 
 func (p plugin) Start(ctx context.Context, registry registry.Registry) error {
 	var err error
-	p.instance, err = session.New(registry)
+	p.instance, err = session.NewSession(registry)
 	if err != nil {
 		return err
 	}
